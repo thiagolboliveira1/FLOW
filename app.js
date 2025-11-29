@@ -1,12 +1,24 @@
-// CONFIGURAÇÃO DO FIREBASE
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "COLE_AQUI",
-  authDomain: "COLE_AQUI",
-  projectId: "COLE_AQUI",
-  storageBucket: "COLE_AQUI",
-  messagingSenderId: "COLE_AQUI",
-  appId: "COLE_AQUI"
+  apiKey: "AIzaSyD4TKgeYfBIQofeSmqqunL50LvMQMBtmhM",
+  authDomain: "controle-de-gastos-66883.firebaseapp.com",
+  projectId: "controle-de-gastos-66883",
+  storageBucket: "controle-de-gastos-66883.firebasestorage.app",
+  messagingSenderId: "795377188764",
+  appId: "1:795377188764:web:0b49cac60bd2ac046a5259",
+  measurementId: "G-ZPJB19KJ32"
 };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
