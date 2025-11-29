@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Controle Financeiro - App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app-root">
+
+    <!-- TELA DE LOGIN / CADASTRO -->
+    <section id="auth-screen" class="screen">
+      <div class="auth-card glass-card">
+        <div class="brand">
+          <div class="brand-icon">ƒ</div>
+          <div class="brand-text">
+            <h1>Flow Finance</h1>
+            <p>Controle de gastos simples e inteligente</p>
+          </div>
+        </div>
+
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-auth-tab="login">Entrar</button>
+          <button class="auth-tab" data-auth-tab="register">Criar conta</button>
+        </div>
+
+        <!-- LOGIN -->
+        <form id="login-form" class="auth-form active">
+          <label class="field">
+            <span>E-mail</span>
+            <input type="email" id="login-email" required placeholder="seu@email.com" />
+          </label>
+          <label class="field">
+            <span>Senha</span>
+            <input type="password" id="login-password" required placeholder="••••••••" />
+          </label>
+          <button type="submit" class="btn primary full">Entrar</button>
+          <button type="button" id="btn-reset-password" class="btn text small">
+            Esqueci minha senha
+          </button>
+          <p class="auth-hint">
+            Dica: crie uma conta para cada pessoa da família e controle tudo em um só sistema.
+          </p>
+          <p id="login-error" class="error-msg"></p>
+        </form>
+
+        <!-- REGISTRO -->
+        <form id="register-form" class="auth-form">
+          <label class="field">
+            <span>Nome</span>
+            <input type="text" id="register-name" required placeholder="Seu nome" />
+          </label>
+          <label class="field">
+            <span>E-mail</span>
+            <input type="email" id="register-email" required placeholder="seu@email.com" />
+          </label>
+          <label class="field">
+            <span>Senha</span>
+            <input type="password" id="register-password" required minlength="6" placeholder="mínimo 6 caracteres" />
+          </label>
+          <button type="submit" class="btn primary full">Criar conta</button>
+          <p id="register-error" class="error-msg"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- TELA PRINCIPAL DO APP -->
+    <section id="app-screen" class="screen hidden">
+      <!-- HEADER -->
+      <header class="app-header gradient-bg">
+        <div class="header-top">
+          <div>
+            <p class="welcome-text">Olá, <span id="user-name">Usuário</span></p>
+            <h2>Visão geral financeira</h2>
+          </div>
+          <button id="btn-logout" class="btn icon-btn" title="Sair">
+            ⟲
+          </button>
+        </div>
+        <div class="header-balance-card">
+          <p>Saldo atual</p>
+          <h1 id="balance-amount">R$ 0,00</h1>
+          <div class="balance-row">
+            <span id="total-income">Entradas: R$ 0,00</span>
+            <span id="total-expense">Saídas: R$ 0,00</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTEÚDO PRINCIPAL -->
+      <main class="app-main">
+        <!-- TABS SUPERIORES -->
+        <nav class="top-tabs">
+          <button class="top-tab active" data-tab="resumo">Resumo</button>
+          <button class="top-tab" data-tab="lancamentos">Lançamentos</button>
+          <button class="top-tab" data-tab="contas">Contas</button>
+          <button class="top-tab" data-tab="servicos">Serviços</button>
+        </nav>
+
+        <!-- RESUMO / MAPA DE ANÁLISE FINANCEIRA -->
+        <section id="tab-resumo" class="tab-content active">
+          <div class="card-group">
+            <div class="info-card">
+              <p>Mês atual</p>
+              <h3 id="current-month-label">-</h3>
+              <p class="muted">Resumo baseado nos lançamentos.</p>
+            </div>
+            <div class="info-card">
+              <p>Percentual comprometido</p>
+              <h3 id="percent-expenses">0%</h3>
+              <p class="muted">Despesas / Receitas</p>
+            </div>
+          </div>
+
+          <div class="card full">
+            <h3>Distribuição por categoria</h3>
+            <ul id="category-list" class="simple-list"></ul>
+            <p class="muted small">
+              Essa parte é uma versão “app” do seu mapa de análise financeira: quanto cada categoria pesa no mês.
+            </p>
+          </div>
+        </section>
+
+        <!-- LANÇAMENTOS -->
+        <section id="tab-lancamentos" class="tab-content">
+          <div class="card">
+            <h3>Novo lançamento</h3>
+            <form id="transaction-form" class="grid-form">
+              <label class="field">
+                <span>Tipo</span>
+                <select id="transaction-type" required>
+                  <option value="receita">Receita</option>
+                  <option value="despesa">Despesa</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Categoria</span>
+                <input id="transaction-category" type="text" placeholder="Ex: aluguel, luz, salário" required />
+              </label>
+              <label class="field">
+                <span>Descrição</span>
+                <input id="transaction-description" type="text" placeholder="Detalhe do lançamento" />
+              </label>
+              <label class="field">
+                <span>Valor (R$)</span>
+                <input id="transaction-amount" type="number" step="0.01" min="0" required />
+              </label>
+              <label class="field">
+                <span>Data</span>
+                <input id="transaction-date" type="date" required />
+              </label>
+              <button type="submit" class="btn primary full">Salvar lançamento</button>
+            </form>
+          </div>
+
+          <div class="card full">
+            <h3>Lançamentos recentes</h3>
+            <ul id="transactions-list" class="simple-list"></ul>
+          </div>
+        </section>
+
+        <!-- CONTAS A PAGAR / RECEBER -->
+        <section id="tab-contas" class="tab-content">
+          <div class="card">
+            <h3>Nova conta</h3>
+            <form id="bill-form" class="grid-form">
+              <label class="field">
+                <span>Tipo</span>
+                <select id="bill-type" required>
+                  <option value="pagar">A pagar</option>
+                  <option value="receber">A receber</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Descrição</span>
+                <input id="bill-description" type="text" placeholder="Ex: água, cliente X" required />
+              </label>
+              <label class="field">
+                <span>Valor (R$)</span>
+                <input id="bill-amount" type="number" step="0.01" min="0" required />
+              </label>
+              <label class="field">
+                <span>Vencimento</span>
+                <input id="bill-due-date" type="date" required />
+              </label>
+              <label class="field">
+                <span>Status</span>
+                <select id="bill-status" required>
+                  <option value="pendente">Pendente</option>
+                  <option value="pago">Pago</option>
+                </select>
+              </label>
+              <button type="submit" class="btn primary full">Salvar conta</button>
+            </form>
+          </div>
+
+          <div class="card full">
+            <h3>Contas pendentes</h3>
+            <ul id="bills-list" class="simple-list"></ul>
+          </div>
+        </section>
+
+        <!-- PREÇO DE VENDA DE SERVIÇOS -->
+        <section id="tab-servicos" class="tab-content">
+          <div class="card">
+            <h3>Cálculo de preço de serviço</h3>
+            <form id="service-form" class="grid-form">
+              <label class="field">
+                <span>Serviço</span>
+                <input id="service-name" type="text" placeholder="Ex: Projeto de móvel sob medida" required />
+              </label>
+              <label class="field">
+                <span>Custo de materiais (R$)</span>
+                <input id="service-materials" type="number" step="0.01" min="0" required />
+              </label>
+              <label class="field">
+                <span>Custo de mão de obra (R$)</span>
+                <input id="service-labor" type="number" step="0.01" min="0" required />
+              </label>
+              <label class="field">
+                <span>Despesas fixas / overhead (%)</span>
+                <input id="service-overhead" type="number" step="1" min="0" value="10" required />
+              </label>
+              <label class="field">
+                <span>Margem de lucro (%)</span>
+                <input id="service-profit" type="number" step="1" min="0" value="30" required />
+              </label>
+              <button type="submit" class="btn primary full">Calcular preço</button>
+            </form>
+          </div>
+
+          <div class="card full">
+            <h3>Serviços calculados</h3>
+            <ul id="services-list" class="simple-list"></ul>
+          </div>
+        </section>
+      </main>
+
+      <!-- NAV INFERIOR MOBILE -->
+      <nav class="bottom-nav">
+        <button class="bottom-nav-btn active" data-tab="resumo">🏠<span>Resumo</span></button>
+        <button class="bottom-nav-btn" data-tab="lancamentos">➕<span>Lançar</span></button>
+        <button class="bottom-nav-btn" data-tab="contas">📋<span>Contas</span></button>
+        <button class="bottom-nav-btn" data-tab="servicos">🛠<span>Serviços</span></button>
+      </nav>
+    </section>
+  </div>
+
+  <!-- Firebase SDK (compat para facilitar) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <!-- App -->
+  <script src="app.js"></script>
+</body>
+</html>
